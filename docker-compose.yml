@@ -1,0 +1,136 @@
+services:
+  postgres_primary:
+    image: bitnami/postgresql:latest
+    container_name: postgres_primary
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=master
+      - POSTGRESQL_REPLICATION_USER=replicationuser
+      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
+      - POSTGRESQL_USERNAME=postgresadmin
+      - POSTGRESQL_PASSWORD=admin123
+      - POSTGRESQL_DATABASE=web_app
+    volumes:
+      - postgres_primary_data:/bitnami/postgresql
+
+  postgres_replica:
+    image: bitnami/postgresql:latest
+    container_name: postgres_replica
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=postgres_primary
+      - POSTGRESQL_REPLICATION_USER=replicationuser
+      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
+      - POSTGRESQL_USERNAME=postgresadmin
+      - POSTGRESQL_PASSWORD=admin123
+    volumes:
+      - postgres_replica_data:/bitnami/postgresql
+    depends_on:
+      - postgres_primary
+
+  postgres_replica2:
+    image: bitnami/postgresql:latest
+    container_name: postgres_replica2
+    environment:
+      - POSTGRESQL_REPLICATION_MODE=slave
+      - POSTGRESQL_MASTER_HOST=postgres_primary
+      - POSTGRESQL_REPLICATION_USER=replicationuser
+      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
+      - POSTGRESQL_USERNAME=postgresadmin
+      - POSTGRESQL_PASSWORD=admin123
+    volumes:
+      - postgres_replica2_data:/bitnami/postgresql
+    depends_on:
+      - postgres_primary
+
+  redis_master:
+    image: bitnami/redis:latest
+    container_name: redis_master
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - redis_master_data:/bitnami/redis/data
+
+  redis_slave:
+    image: bitnami/redis:latest
+    container_name: redis_slave
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis_master
+    volumes:
+      - redis_slave_data:/bitnami/redis/data
+    depends_on:
+      - redis_master
+
+  celery:
+    build: .
+    command: celery -A uniMart worker -E -l info
+    container_name: celery
+    volumes:
+      - ./uniMart:/apps
+    environment:
+      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
+      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
+      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
+      - REDIS_URL=redis://redis_master:6379/0
+      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
+      - DEBUG=True
+    depends_on:
+      - postgres_primary
+      - redis_master
+
+  celery-beat:
+    build: .
+    command: celery -A uniMart beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    container_name: celery-beat
+    volumes:
+      - ./uniMart:/apps
+    environment:
+      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
+      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
+      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
+      - REDIS_URL=redis://redis_master:6379/0
+      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
+      - DEBUG=True
+    depends_on:
+      - postgres_primary
+      - redis_master
+      - celery
+
+  app:
+    build: .
+    volumes:
+      - ./uniMart:/apps
+    environment:
+      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
+      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
+      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
+      - REDIS_URL=redis://redis_master:6379/0
+      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
+      - DEBUG=True
+    depends_on:
+      - postgres_primary
+      - redis_master
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certs/cert.pem:/etc/ssl/certs/cert.pem
+      - ./certs/key.pem:/etc/ssl/private/key.pem
+      - ./uniMart/static:/app/static
+      - ./uniMart/media:/app/media
+    depends_on:
+      - app
+
+volumes:
+  postgres_primary_data:
+  postgres_replica_data:
+  postgres_replica2_data:
+  redis_master_data:
+  redis_slave_data:

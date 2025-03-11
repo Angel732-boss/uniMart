@@ -1,0 +1,7 @@
+*/__pycache__/*.pyc
+static/*
+media/*
+db.sqlite3
+*.pyc
+*.jpg
+*.jpeg
