@@ -9,7 +9,7 @@ class TestModels(TestCase):
             "password": "@testUser732",
             "email": "testuser@gmail.com",
             "date_of_birth": "2003-08-23",
-            "image": "/sites/uniMart/media/profile_pics/default.jpg"
+            "image": "/apps/media/profile_pics/default.jpg"
         }
 
         self.user = User.objects.create(
