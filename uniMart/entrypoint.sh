@@ -5,8 +5,13 @@ set -e
 shutdown_uwsgi() {
     echo "Received shutdown signal. Stopping uWSGI..."
     # Send SIGTERM to uWSGI master process
-    kill -TERM "$uwsgi_pid" 2>/dev/null
+    #kill -TERM "$uwsgi_pid" 2>/dev/null
+    uwsgi --stop uwsgi.pid
+    kill -9 "$celery_pid"
+    kill -9 "$celery_beat_pid"
     wait "$uwsgi_pid"
+    wait "$celery_pid"
+    wait "$celery_beat_pid"
     echo "uWSGI stopped."
     exit 0
 }
@@ -36,9 +41,21 @@ echo "Starting uWSGI..."
 exec uwsgi --ini /apps/uwsgi.ini &
 uwsgi_pid=$!
 
+echo "$uwsgi_pid" > uwsgi.pid
+
+exec celery -A uniMart worker -E -l info &
+celery_pid=$!
+
+exec celery -A uniMart beat -l info &
+celery_beat_pid=$!
+
 set +e
 
 wait "$uwsgi_pid"
+
+wait "$celery_pid"
+
+wait  "$celery_beat_pid"
 
 # If wait exits (e.g., uWSGI crashes), log it
 echo "uWSGI exited unexpectedly with code $?"

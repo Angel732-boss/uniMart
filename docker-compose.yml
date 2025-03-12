@@ -46,7 +46,7 @@ services:
     image: bitnami/redis:latest
     container_name: redis_master
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_REPLICATION_MODE=master
     volumes:
       - redis_master_data:/bitnami/redis/data
@@ -55,60 +55,27 @@ services:
     image: bitnami/redis:latest
     container_name: redis_slave
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis_master
+      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
       - redis_slave_data:/bitnami/redis/data
     depends_on:
       - redis_master
-
-  celery:
-    build: .
-    command: celery -A uniMart worker -E -l info
-    container_name: celery
-    volumes:
-      - ./uniMart:/apps
-    environment:
-      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
-      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
-      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
-      - REDIS_URL=redis://redis_master:6379/0
-      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
-      - DEBUG=True
-    depends_on:
-      - postgres_primary
-      - redis_master
-
-  celery-beat:
-    build: .
-    command: celery -A uniMart beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    container_name: celery-beat
-    volumes:
-      - ./uniMart:/apps
-    environment:
-      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
-      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
-      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
-      - REDIS_URL=redis://redis_master:6379/0
-      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
-      - DEBUG=True
-    depends_on:
-      - postgres_primary
-      - redis_master
-      - celery
 
   app:
     build: .
     volumes:
       - ./uniMart:/apps
     environment:
-      - PRIMARY_DATABASE_URL=postgres://postgresadmin:admin123@postgres_primary:5432/web_app
-      - REPLICA_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica:5432/web_app
-      - REPLICA2_DATABASE_URL=postgres://postgresadmin:admin123@postgres_replica2:5432/web_app
-      - REDIS_URL=redis://redis_master:6379/0
-      - SECRET_KEY=jkhdfiahfi7g67fbahdghgf6gdwhudgcfgafhvcughuhvg
-      - DEBUG=True
+      - PRIMARY_DATABASE_URL=${PRIMARY_DATABASE_URL}
+      - REPLICA_DATABASE_URL=${REPLICA_DATABASE_URL}
+      - REPLICA2_DATABASE_URL=${REPLICA2_DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - REDIS_SLAVE_URL=${REDIS_SLAVE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
     depends_on:
       - postgres_primary
       - redis_master
