@@ -1,0 +1,47 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.13]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install docker-compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+    - name: Install Dependencies
+      run: docker-compose up -d --build
+    - name: Run Tests
+      run: |
+        docker-compose exec app python manage.py test
+    - name: Verify web service
+      run: |
+        sleep 5  # Wait for services to start
+        curl http://localhost:3000
+
+    - name: Tear down
+      run: |
+        docker-compose down
+
+
+
+
