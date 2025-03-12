@@ -1,8 +1,8 @@
 import os
 from uuid import uuid4
 from django.db import models
-from PIL import Image
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from .tasks import resize_image
 
 # Create your models here.
 
@@ -55,9 +55,4 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-
-        img = Image.open(self.image.path)
-        if img.height > 300 or img.width > 300:
-            output_size = (300, 300)
-            img.thumbnail(output_size)
-            img.save(self.image.path)
+        resize_image.delay(self.image.path)

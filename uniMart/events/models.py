@@ -21,7 +21,7 @@ class Event(TimeStampedModel):
     attendees = models.ManyToManyField(User, related_name='events_attending', blank=True)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    search_vector = models.SearchVectorField(null=True)
+    search_vector = SearchVectorField(null=True)
     slug = models.SlugField(max_length=100, blank=True)
     status = models.CharField(
         max_length=20,
@@ -38,7 +38,7 @@ class Event(TimeStampedModel):
             models.Index(fields=['start_time']),
             models.Index(fields=['end_time']),
             models.Index(fields=['status']),
-            GinIndex(fields=['search_vector'], name='post_search_idx'),
+            GinIndex(fields=['search_vector'], name='event_search_idx'),
         ]
         ordering = ['-created_at']
 

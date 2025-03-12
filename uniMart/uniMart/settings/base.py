@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'hubs.apps.HubsConfig',
     #'services.apps.ServicesConfig',
-    #'events.apps.EventsConfig',
+    'events.apps.EventsConfig',
     'blogs.apps.BlogsConfig',
     'utils.apps.UtilsConfig',
     'django.contrib.admin',
