@@ -1,0 +1,4 @@
+{
+  "name": "uniMart2",
+  "postStartCommand": "sudo service cron start"
+}
