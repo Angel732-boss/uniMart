@@ -36,7 +36,7 @@ jobs:
     - name: Verify web service
       run: |
         sleep 5  # Wait for services to start
-        curl http://localhost:3000
+        curl http://localhost
 
     - name: Tear down
       run: |
