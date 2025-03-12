@@ -27,9 +27,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+INTERNAL_IPS = ['127.0.0.1', '172.18.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1', 'https://192.168.157.156', 'https://unimart.duckdns.org']
 
