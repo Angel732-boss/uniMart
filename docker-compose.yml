@@ -4,10 +4,10 @@ services:
     container_name: postgres_primary
     environment:
       - POSTGRESQL_REPLICATION_MODE=master
-      - POSTGRESQL_REPLICATION_USER=replicationuser
-      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
-      - POSTGRESQL_USERNAME=postgresadmin
-      - POSTGRESQL_PASSWORD=admin123
+      - POSTGRESQL_REPLICATION_USER=${POSTGRESQL_REPLICATION_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${POSTGRESQL_REPLICATION_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
       - POSTGRESQL_DATABASE=web_app
     volumes:
       - postgres_primary_data:/bitnami/postgresql
@@ -18,10 +18,10 @@ services:
     environment:
       - POSTGRESQL_REPLICATION_MODE=slave
       - POSTGRESQL_MASTER_HOST=postgres_primary
-      - POSTGRESQL_REPLICATION_USER=replicationuser
-      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
-      - POSTGRESQL_USERNAME=postgresadmin
-      - POSTGRESQL_PASSWORD=admin123
+      - POSTGRESQL_REPLICATION_USER=${POSTGRESQL_REPLICATION_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${POSTGRESQL_REPLICATION_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
     volumes:
       - postgres_replica_data:/bitnami/postgresql
     depends_on:
@@ -33,10 +33,10 @@ services:
     environment:
       - POSTGRESQL_REPLICATION_MODE=slave
       - POSTGRESQL_MASTER_HOST=postgres_primary
-      - POSTGRESQL_REPLICATION_USER=replicationuser
-      - POSTGRESQL_REPLICATION_PASSWORD=replicationpassword
-      - POSTGRESQL_USERNAME=postgresadmin
-      - POSTGRESQL_PASSWORD=admin123
+      - POSTGRESQL_REPLICATION_USER=${POSTGRESQL_REPLICATION_USER}
+      - POSTGRESQL_REPLICATION_PASSWORD=${POSTGRESQL_REPLICATION_PASSWORD}
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
     volumes:
       - postgres_replica2_data:/bitnami/postgresql
     depends_on:
