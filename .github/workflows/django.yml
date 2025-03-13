@@ -41,7 +41,3 @@ jobs:
     - name: Tear down
       run: |
         docker-compose down
-
-
-
-
