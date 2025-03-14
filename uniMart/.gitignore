@@ -1,5 +1,0 @@
-*/__pycache__/*.pyc
-*.pyc
-uniMart/celerybeat-schedule-shm
-uniMart/celerybeat-schedule-wal
-uwsgi.pid
