@@ -204,15 +204,3 @@ DATABASES = {
         },
     }
 }
-
-def save(self, *args, **kwargs):
-    if not self.slug:
-        base_slug = slugify(f"{self.name}-{self.start_time.strftime('%Y%m%d')}")
-        slug = base_slug
-        counter = 1
-        while Event.objects.filter(hub=self.hub, slug=slug).exists():
-            slug = f"{base_slug}-{counter}"
-            counter += 1
-        self.slug = slug
-    # Rest of the save method...
-    super().save(*args, **kwargs)

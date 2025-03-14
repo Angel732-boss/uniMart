@@ -44,13 +44,7 @@ class Event(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(f"{self.name}-{self.start_time.strftime('%Y%m%d')}")
-            slug = base_slug
-            counter = 1
-            while Event.objects.filter(hub=self.hub, slug=slug).exists():
-                slug = f"{base_slug}-{counter}"
-                counter += 1
-            self.slug = slug
+            self.slug = slugify(f"{self.name}-{self.start_time.strftime('%Y%m%d')}")
 
         if not self.pk:  # Only for new events
             now = timezone.now()

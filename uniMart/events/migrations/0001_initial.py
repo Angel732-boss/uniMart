@@ -61,7 +61,8 @@ class Migration(migrations.Migration):
             FOR EACH ROW EXECUTE FUNCTION update_event_search_vector();
             """,
             reverse_sql="""
-            DROP FUNCTION IF EXISTS update_event_search_vector CASCADE;
+            DROP TRIGGER IF EXISTS post_search_vector_trigger ON events_event;
+            DROP FUNCTION IF EXISTS update_event_search_vector;
             """
         )
     ]
