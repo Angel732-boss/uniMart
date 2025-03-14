@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['*']
 
 INTERNAL_IPS = ['127.0.0.1', '172.18.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1', 'https://192.168.157.156', 'https://unimart.duckdns.org']
+CSRF_TRUSTED_ORIGINS = ['https://127.0.0.1', 'https://192.168.157.156']
 
 # Application definition
 
@@ -39,12 +39,17 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_celery_results',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'accounts.apps.AccountsConfig',
     'hubs.apps.HubsConfig',
     #'services.apps.ServicesConfig',
     'events.apps.EventsConfig',
     'blogs.apps.BlogsConfig',
     'utils.apps.UtilsConfig',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,7 +68,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'uniMart.replication_middleware.ReplicationMiddleware'
+    'uniMart.replication_middleware.ReplicationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'uniMart.urls'
@@ -135,6 +141,14 @@ for db in DATABASES.values():
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -149,6 +163,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+SITE_ID = 1
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
 '''
 if not env('DEBUG'):
     EMAIL_BACKEND = env('EMAIL_BACKEND')
