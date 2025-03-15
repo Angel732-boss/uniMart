@@ -49,7 +49,7 @@
             <ul>
               <li><a href="{% url 'home' %}" class="">Home</a></li>
               <li><a href="#">Services</a></li>
-              <li><a href="#">Blog</a></li>
+              <li><a href="{% url 'blog-home' %}">Blogs</a></li>
               <li><a href="#">Team</a></li>
               <li><a href="index.html#contact">Contact</a></li>
               <li><a href="#">About</a></li>
@@ -57,7 +57,11 @@
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
           </nav>
     
-          <a class="btn-getstarted" href="#">Sign Up</a>
+          {% if not user.is_authenticated %}
+          <a class="btn-getstarted" href="{% url 'accounts-register' %}">Sign Up</a>
+          {% else %}
+          <a class="btn-getstarted" href="#">Sign Out</a>
+          {% endif %}
     
         </div>
     </header>
@@ -71,7 +75,7 @@
           <div class="container">
             <div class="row">
               <div class="col-lg-10">
-                <h2 data-aos="fade-up" data-aos-delay="100">Welcome to Our Store</h2>
+                <h2 data-aos="fade-up" data-aos-delay="100">Welcome to schoolease</h2>
                 <p data-aos="fade-up" data-aos-delay="200">We are here for your needs...</p>
               </div>
               <div class="col-lg-5">
