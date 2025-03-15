@@ -31,6 +31,9 @@ while ! nc -z postgres_replica 5432; do
 done
 echo "PostgreSQL (replica) is up!"
 
+echo "Make database migrations..."
+python manage.py makemigrations
+
 echo "Running database migrations on default (primary)..."
 python manage.py migrate --database=default --noinput
 

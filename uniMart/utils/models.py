@@ -1,3 +1,5 @@
+import os
+from uuid import uuid4
 from django.db import models
 from django.utils.text import slugify
 from accounts.models import User
@@ -19,6 +21,7 @@ class Tag(TimeStampedModel):
 
 class Category(TimeStampedModel):
     name = models.CharField(max_length=50)
+    # Hub attribute Might get deprecated
     hub = models.ForeignKey(
         'hubs.Hub',
         on_delete=models.CASCADE,
@@ -66,3 +69,35 @@ class SearchHistory(models.Model):
         if self.user:
             username = self.user.username
         return f"{username} searched '{self.query}' in {self.hub.name}"
+
+def rename(instance, filename):
+    upload_to = f'clients/{instance.name}/'
+    ext = filename.split('.')[-1]
+    return os.path.join(upload_to, f'{uuid4().hex}.{ext}')
+
+class Client(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    url = models.URLField()
+    image = models.ImageField(upload_to=rename)
+
+    def __str__(self):
+        return self.name
+
+class About(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    icon = models.CharField()
+
+    def __str__(self):
+        return self.name
+
+'''
+class Brand(TimeStampedModel):
+    url = models.URLField()
+    name = models.CharField(max_length=20)
+    content = models.TextField()
+    icon = models.CharField()
+
+    def __str__(self):
+        return self.name
+'''

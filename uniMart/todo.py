@@ -204,3 +204,26 @@ DATABASES = {
         },
     }
 }
+
+@shared_task
+def resize_image(image_path, bucket_name='my-bucket'):
+    import boto3
+    from io import BytesIO
+    
+    s3 = boto3.client('s3')
+    
+    # Download from S3
+    file_obj = BytesIO()
+    s3.download_fileobj(bucket_name, image_path, file_obj)
+    file_obj.seek(0)
+    
+    # Resize
+    img = Image.open(file_obj)
+    if img.height > 300 or img.width > 300:
+        img.thumbnail((300, 300))
+        output = BytesIO()
+        img.save(output, format=img.format, quality=95)
+        output.seek(0)
+        
+        # Upload back to S3
+        s3.upload_fileobj(output, bucket_name, image_path)

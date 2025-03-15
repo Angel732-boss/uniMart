@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="{{ meta_description }}" name="description">
+    <meta content="{{ meta_keywords }}" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link href="{% static 'assets/css/main2.css' %}" rel="stylesheet">
+
+    <!-- Page title -->
+    {% if title %}
+    <title>{{ site_name }}. {{ title }}</title>
+    {% else %}
+    <title>{{ site_name }}.</title>
+    {% endif %}
+
+</head>
+
+<body class="index-page over">
+    <header id="header" class="header d-flex align-items-center fixed-top">
+        <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+    
+          <a href="#" class="logo d-flex align-items-center me-auto me-xl-0">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.png" alt=""> -->
+            <h1 class="sitename">{{ site_name }}</h1><span>.</span>
+          </a>
+    
+          <nav id="navmenu" class="navmenu">
+            <ul>
+              <li><a href="{% url 'home' %}" class="">Home</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="index.html#contact">Contact</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+          </nav>
+    
+          <a class="btn-getstarted" href="#">Sign Up</a>
+    
+        </div>
+    </header>
+    <main class="main">
+
+      <!-- Hero Section -->
+        <section id="hero" class="hero section">
+    
+          <img src="{% static 'assets/img/hero-bg.jpg' %}" alt="" loading="lazy" data-aos="fade-in">
+    
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-10">
+                <h2 data-aos="fade-up" data-aos-delay="100">Welcome to Our Store</h2>
+                <p data-aos="fade-up" data-aos-delay="200">We are here for your needs...</p>
+              </div>
+              <div class="col-lg-5">
+                <form action="#" class="sign-up-form d-flex" data-aos="fade-up" data-aos-delay="300">
+                  <input type="text" class="form-control" placeholder="Enter text to search">
+                  <input type="submit" class="btn btn-primary" value="Search">
+                </form>
+              </div>
+          </div>
+    
+        </section><!-- /Hero Section -->
+
+    <!-- Clients Section -->
+    <section id="clients" class="clients section">
+
+      <div class="container" data-aos="fade-up">
+
+        <div class="row gy-4">
+        {% for client in clients %}
+          <div class="col-xl-2 col-md-3 col-6 client-logo">
+            <img src="{% static client %}" class="img-fluid" alt="">
+          </div><!-- End Client Item -->
+        {% endfor %}
+        </div>
+
+      </div>
+
+    </section><!-- /Clients Section -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row align-items-xl-center gy-5">
+
+          <div class="col-xl-5 content">
+            <h3>About Us</h3>
+            <h2>Ducimus rerum libero reprehenderit cumque</h2>
+            <p>Ipsa sint sit. Quis ducimus tempore dolores impedit et dolor cumque alias maxime. Enim reiciendis minus et rerum hic non. Dicta quas cum quia maiores iure. Quidem nulla qui assumenda incidunt voluptatem tempora deleniti soluta.</p>
+            <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+          </div>
+
+          <div class="col-xl-7">
+            <div class="row gy-4 icon-boxes">
+              {% for about in abouts %}
+              <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="icon-box">
+                  <i class="bi {{ about.icon }}"></i>
+                  <h3>{{ about.name }}</h3>
+                  <p>{{ about.description }}</p>
+                </div>
+              </div> <!-- End Icon Box -->
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section><!-- /About Section -->
+
+    </main>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="{% static 'assets/js/users.js' %}"></script>
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/htmx/htmx.min.js' %}" defer></script>
+</body>
+
+</html>
