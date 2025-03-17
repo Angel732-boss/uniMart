@@ -18,5 +18,11 @@ def home(request):
     }
     return render(request, "hubs/home.html", contexts)
 
+def about(request):
+    contexts = {
+        "abouts": About.objects.all()
+    }
+    return render(request, "hubs/about.html", contexts)
+
 def test_url(request):
     return HttpResponse(f"REMOTE_ADDR: {request.META.get('REMOTE_ADDR')}")
