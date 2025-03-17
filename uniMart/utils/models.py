@@ -19,9 +19,19 @@ class Tag(TimeStampedModel):
     def __str__(self):
         return self.name
 
+from django.db import models
+from django.utils.text import slugify
+
 class Category(TimeStampedModel):
+    # Define choices for service types
+    SERVICE_TYPE_CHOICES = [
+        ('events', 'Events'),
+        ('services', 'Services'),
+        ('blogs', 'Blogs'),
+        ('communities', 'Communities')
+    ]
+
     name = models.CharField(max_length=50)
-    # Hub attribute Might get deprecated
     hub = models.ForeignKey(
         'hubs.Hub',
         on_delete=models.CASCADE,
@@ -30,17 +40,35 @@ class Category(TimeStampedModel):
         related_name='categories',
         help_text="If set, this category is specific to a hub; if null, it’s global."
     )
+    
+    # New service_type field
+    service_type = models.CharField(
+        max_length=20,
+        choices=SERVICE_TYPE_CHOICES,
+        help_text="The type of service this category belongs to."
+    )
     slug = models.SlugField(
         max_length=50,
         help_text="A URL-friendly version of the name.",
         blank=True
     )
     description = models.TextField(null=True)
-    meta_keywords = models.CharField('Meta Keywords', null=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
-    meta_description = models.CharField('Meta Description', null=True, max_length=255, help_text='Content for description meta tag')
+    meta_keywords = models.CharField(
+        'Meta Keywords',
+        null=True,
+        max_length=255,
+        help_text='Comma delimited set of SEO keywords for meta tag'
+    )
+    meta_description = models.CharField(
+        'Meta Description',
+        null=True,
+        max_length=255,
+        help_text='Content for description meta tag'
+    )
 
     class Meta:
-        unique_together = ('hub', 'slug')  # Ensures slug is unique within a hub (or globally if hub is null)
+        # Updated uniqueness constraint
+        unique_together = ('hub', 'service_type', 'slug')
         verbose_name_plural = "categories"
         ordering = ['-created_at']
 
@@ -50,8 +78,8 @@ class Category(TimeStampedModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
-
+        # Updated to include service type
+        return f"{self.get_service_type_display()} - {self.name}"
 
 class SearchHistory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

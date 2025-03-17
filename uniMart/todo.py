@@ -205,6 +205,111 @@ DATABASES = {
     }
 }
 
+from django.test import TestCase
+from django.db.utils import IntegrityError
+from utils.models import Category
+from hubs.models import Hub
+
+class CategoryModelTest(TestCase):
+    def setUp(self):
+        # Create two Hub instances for testing uniqueness across different hubs
+        self.hub1 = Hub.objects.create(name='Hub 1')
+        self.hub2 = Hub.objects.create(name='Hub 2')
+        
+        # Create a Category instance with all fields specified
+        self.category = Category.objects.create(
+            name='Test Category',
+            hub=self.hub1,
+            service_type='events',
+            slug='test-category',
+            description='This is a test category.',
+            meta_keywords='test, category',
+            meta_description='Test category meta description'
+        )
+
+    def test_category_creation(self):
+        """Test that a Category instance is created with all fields set correctly."""
+        self.assertEqual(self.category.name, 'Test Category')
+        self.assertEqual(self.category.hub, self.hub1)
+        self.assertEqual(self.category.service_type, 'events')
+        self.assertEqual(self.category.slug, 'test-category')
+        self.assertEqual(self.category.description, 'This is a test category.')
+        self.assertEqual(self.category.meta_keywords, 'test, category')
+        self.assertEqual(self.category.meta_description, 'Test category meta description')
+
+    def test_slug_auto_generation(self):
+        """Test that the slug is auto-generated when not provided."""
+        category = Category.objects.create(
+            name='Another Category',
+            hub=self.hub1,
+            service_type='services'
+        )
+        self.assertEqual(category.slug, 'another-category')
+
+    def test_unique_together_constraint_same_hub_service_type_slug(self):
+        """Test that the uniqueness constraint prevents duplicate (hub, service_type, slug) combinations."""
+        with self.assertRaises(IntegrityError):
+            Category.objects.create(
+                name='Duplicate Category',
+                hub=self.hub1,
+                service_type='events',
+                slug='test-category'
+            )
+
+    def test_unique_together_constraint_different_hub(self):
+        """Test that a category with the same service_type and slug but different hub can be created."""
+        category = Category.objects.create(
+            name='Test Category',
+            hub=self.hub2,
+            service_type='events',
+            slug='test-category'
+        )
+        self.assertEqual(category.slug, 'test-category')
+
+    def test_unique_together_constraint_different_service_type(self):
+        """Test that a category with the same hub and slug but different service_type can be created."""
+        category = Category.objects.create(
+            name='Test Category',
+            hub=self.hub1,
+            service_type='services',
+            slug='test-category'
+        )
+        self.assertEqual(category.slug, 'test-category')
+
+    def test_unique_together_constraint_different_slug(self):
+        """Test that a category with the same hub and service_type but different slug can be created."""
+        category = Category.objects.create(
+            name='Different Slug Category',
+            hub=self.hub1,
+            service_type='events',
+            slug='different-slug'
+        )
+        self.assertEqual(category.slug, 'different-slug')
+
+    def test_global_category_uniqueness(self):
+        """Test that multiple global categories (hub=None) with the same service_type and slug can coexist."""
+        category1 = Category.objects.create(
+            name='Global Category 1',
+            hub=None,
+            service_type='events',
+            slug='global-category'
+        )
+        category2 = Category.objects.create(
+            name='Global Category 2',
+            hub=None,
+            service_type='events',
+            slug='global-category'
+        )
+        self.assertNotEqual(category1.id, category2.id)
+        self.assertEqual(
+            Category.objects.filter(slug='global-category', service_type='events', hub=None).count(),
+            2
+        )
+
+    def test_str_method(self):
+        """Test that the __str__ method returns the expected string."""
+        self.assertEqual(str(self.category), 'Events - Test Category')
+
 @shared_task
 def resize_image(image_path, bucket_name='my-bucket'):
     import boto3
@@ -227,3 +332,11 @@ def resize_image(image_path, bucket_name='my-bucket'):
         
         # Upload back to S3
         s3.upload_fileobj(output, bucket_name, image_path)
+
+# dumping 
+pg_dump -U username -d database_name > dump.sql
+psql -U username -d database_name < dump.sql
+
+python manage.py dumpdata --exclude auth.Permission --exclude contenttypes > data.json
+python manage.py dumpdata app_name > data.json
+python manage.py loaddata data.json

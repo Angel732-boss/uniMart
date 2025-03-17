@@ -1,0 +1,198 @@
+/* Fonts */
+:root {
+    --default-font: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --heading-font: "Montserrat", sans-serif;
+    --nav-font: "Poppins", sans-serif;
+  }
+  
+  /* Global Colors */
+  :root {
+    /* Background Color - This color is applied to the background of the entire website as well as individual sections. */
+    --background-color: #ffffff;
+  
+    /* Default Color - This is the default color used for the majority of the text content. */
+    --default-color: #212529;
+  
+    /* Heading Color - This color is used for titles, headings and secondary elements. */
+    --heading-color: #32353a;
+  
+    /* Accent Color - This is the main accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out. */
+    --accent-color: #e84545;
+  
+    /* Contrast Color - This is a color used for text when the background color is one of the heading, accent, or default colors. Its purpose is to ensure proper contrast and readability when placed over these more dominant colors. */
+    --contrast-color: #ffffff;
+  }
+  
+  /* Nav Menu Colors */
+  :root {
+    /* Nav Color - This is the default color of the main navmenu links. */
+    --nav-color: #3a3939;
+  
+    /* Nav Hover Color - This color is applied to main navmenu links when they are hovered over. */
+    --nav-hover-color: #e84545;
+  
+    /* Nav Dropdown Background Color - This color is used as the background for dropdown boxes that appear when hovering over primary navigation items. */
+    --nav-dropdown-background-color: #ffffff;
+  
+    /* Nav Dropdown Color - This color is used for navigation links of the dropdown items in the navigation menu. */
+    --nav-dropdown-color: #3a3939;
+  
+    /* Nav Dropdown Hover Color - Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+    --nav-dropdown-hover-color: #e84545;
+  }
+  
+  /* Smooth scroll */
+  :root {
+    scroll-behavior: smooth;
+  }
+  
+  /*--------------------------------------------------------------
+  # General
+  --------------------------------------------------------------*/
+  body {
+    color: var(--default-color);
+    background-color: var(--background-color);
+    font-family: var(--default-font);
+  }
+  
+  a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  
+  a:hover {
+    color: color-mix(in srgb, var(--accent-color), transparent 25%);
+    text-decoration: none;
+  }
+
+/*--------------------------------------------------------------
+# Scroll Top Button
+--------------------------------------------------------------*/
+.scroll-top {
+    position: fixed;
+    visibility: hidden;
+    opacity: 0;
+    right: 15px;
+    bottom: 15px;
+    z-index: 99999;
+    background-color: var(--accent-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    transition: all 0.4s;
+  }
+  
+  .scroll-top i {
+    font-size: 24px;
+    color: var(--contrast-color);
+    line-height: 0;
+  }
+  
+  .scroll-top:hover {
+    background-color: color-mix(in srgb, var(--accent-color), transparent 20%);
+    color: var(--contrast-color);
+  }
+  
+  .scroll-top.active {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /*--------------------------------------------------------------
+  # Disable aos animation delay on mobile devices
+  --------------------------------------------------------------*/
+  @media screen and (max-width: 768px) {
+    [data-aos-delay] {
+      transition-delay: 0 !important;
+    }
+  }
+
+/*--------------------------------------------------------------
+# Preloader
+--------------------------------------------------------------*/
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    overflow: hidden;
+    background: var(--background-color);
+    transition: all 0.6s ease-out;
+  }
+  
+  #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #ffffff;
+    border-color: var(--accent-color) transparent var(--accent-color) transparent;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: animate-preloader 1.5s linear infinite;
+  }
+  
+  @keyframes animate-preloader {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+
+.btn-outline-custom {
+    --bs-btn-color: var(--accent-color);
+    --bs-btn-border-color: var(--accent-color);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--accent-color);
+    --bs-btn-hover-border-color: var(--accent-color);
+    --bs-btn-focus-shadow-rgb: 13, 110, 253;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--accent-color);
+    --bs-btn-active-border-color: var(--accent-color);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: var(--accent-color);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--accent-color);
+    --bs-gradient: none
+  }
+  
+  .btn-custom {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #e84545;
+    --bs-btn-border-color: #e84545;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #eb6060;
+    --bs-btn-hover-border-color: tranparent;
+    --bs-btn-focus-shadow-rgb: 230, 51, 51;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #eb4c4c;
+    --bs-btn-active-border-color: #eb4c4c;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #e84545;
+    --bs-btn-disabled-border-color: #e84545;
+  }
+  
+  .text-custom {
+    color: var(--accent-color);
+  }
+  
+  .form-control:focus {
+    /*box-shadow: none !important;
+     Remove the default blue border */
+    -webkit-box-shadow: 0 0 0 .25rem #f7bbbb !important;
+    box-shadow: 0 0 0 .25rem #f7bbbb !important;
+    border-color: #ee7777 !important;
+    outline: 0;
+  }
+  
+  .form-control.is-invalid:focus {
+    border-color: var(--bs-form-invalid-border-color) !important;
+    -webkit-box-shadow: 0 0 0 .25rem #dc3545a1 !important;
+    box-shadow: 0 0 0 .25rem #dc3545a1 !important;
+  }
