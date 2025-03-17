@@ -3,3 +3,4 @@
 uniMart/celerybeat-schedule-shm
 uniMart/celerybeat-schedule-wal
 keep_alive.log
+uwsgi.pid

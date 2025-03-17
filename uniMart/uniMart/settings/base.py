@@ -166,8 +166,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {'email'}
 
 '''
 if not env('DEBUG'):
@@ -213,7 +213,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-LOGIN_REDIRECT_URL = 'admin:index'
+LOGIN_REDIRECT_URL = 'home'
 
 SITE_NAME = 'schoolease'
 
