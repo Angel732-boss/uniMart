@@ -39,8 +39,8 @@ class Event(TimeStampedModel):
         default='planned'
     )
     description = models.TextField(null=True, blank=True)
-    meta_keywords = models.CharField('Meta Keywords', null=True, blank=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
-    meta_description = models.CharField('Meta Description', null=True, blank=True, max_length=255, help_text='Content for description meta tag')
+    meta_keywords = models.CharField(null=True, blank=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
+    meta_description = models.CharField(null=True, blank=True, max_length=255, help_text='Content for description meta tag')
 
     class Meta:
         unique_together = ('hub', 'slug')

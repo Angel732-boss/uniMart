@@ -12,6 +12,13 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
 
+class LastProcessed(models.Model):
+    task_name = models.CharField(max_length=100, unique=True)
+    last_timestamp = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.task_name}: {self.last_timestamp}"
+
 class Tag(TimeStampedModel):
     name = models.CharField(max_length=50)
     hub = models.ForeignKey('hubs.Hub', on_delete=models.CASCADE, related_name='tags', null=True, blank=True)
