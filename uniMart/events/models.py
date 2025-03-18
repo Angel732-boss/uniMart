@@ -30,16 +30,16 @@ class Event(TimeStampedModel):
         limit_choices_to={'service_type': 'events'},
         related_name='events'
     )
-    search_vector = SearchVectorField(null=True)
+    search_vector = SearchVectorField(null=True, blank=True)
     slug = models.SlugField(max_length=100, blank=True)
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default='planned'
     )
-    description = models.TextField(null=True)
-    meta_keywords = models.CharField('Meta Keywords', null=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
-    meta_description = models.CharField('Meta Description', null=True, max_length=255, help_text='Content for description meta tag')
+    description = models.TextField(null=True, blank=True)
+    meta_keywords = models.CharField('Meta Keywords', null=True, blank=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
+    meta_description = models.CharField('Meta Description', null=True, blank=True, max_length=255, help_text='Content for description meta tag')
 
     class Meta:
         unique_together = ('hub', 'slug')

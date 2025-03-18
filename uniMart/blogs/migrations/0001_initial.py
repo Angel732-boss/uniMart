@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('hubs', '0003_hub_admin_hub_location'),
+        ('utils', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
