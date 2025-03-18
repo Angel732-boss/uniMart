@@ -6,6 +6,7 @@ from accounts.models import User
 from utils.models import TimeStampedModel
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
+from .tasks import update_search_vector
 
 class Event(TimeStampedModel):
     STATUS_CHOICES = (
@@ -79,7 +80,29 @@ class Event(TimeStampedModel):
                 self.status = 'ongoing'
             elif self.end_time <= now:
                 self.status = 'completed'
+            
+            if not self.meta_description:
+                self.generate_meta_description()
+            if not self.meta_keywords:
+                self.generate_meta_keywords()
+                
         super().save(*args, **kwargs)
+        update_search_vector.delay(self.pk)
+
+    def generate_meta_description(self):
+        """Generate a meta description based on available fields."""
+        if self.description:
+            return self.description[:150]  # Trim to 150 characters
+        # Construct a sentence if description is missing
+        category_str = f"a {self.category.name} " if self.category else ""
+        return f"Join {self.organizer.username} for {self.name}, {category_str}event at {self.venue} on {self.start_time.strftime('%B %d, %Y')}."[:150]
+
+    def generate_meta_keywords(self):
+        """Generate a comma-separated list of keywords from related fields."""
+        keywords = [self.name, self.venue]
+        if self.category:
+            keywords.append(self.category.name)
+        keywords.extend([self.hub.name, self.organizer.username])
 
     @property
     def duration(self):
@@ -88,6 +111,11 @@ class Event(TimeStampedModel):
     @property
     def is_full(self):
         return self.attendees.count() >= self.capacity
+
+    def add_attendee(self, user):
+        if self.is_full:
+            raise ValidationError("Event is at full capacity.")
+        self.attendees.add(user)
 
     def __str__(self):
         return f"{self.name} ({self.status})"

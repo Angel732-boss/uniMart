@@ -12,7 +12,7 @@ class Post(TimeStampedModel):
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     hub = models.ForeignKey('hubs.Hub', on_delete=models.PROTECT, related_name='posts')
-    category = models.ForeignKey('utils.Category', on_delete=models.PROTECT, related_name='posts')
+    category = models.ForeignKey('utils.Category', limit_choices_to={'service_type'}, on_delete=models.PROTECT, related_name='posts')
     tags = models.ManyToManyField('utils.Tag', blank=True)
     slug = models.SlugField(blank=True)
     search_vector = SearchVectorField(null=True, blank=True)

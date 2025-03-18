@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'uniMart.replication_middleware.ReplicationMiddleware',
+    #'htmlmin.middleware.HtmlMinifyMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -90,6 +91,8 @@ CACHES = {
         }
     }
 }
+
+#HTML_MINIFY = True
 
 CELERY_BROKER_URL = os.getenv('REDIS_URL')
 CELERY_CACHE_BACKEND = 'default'
