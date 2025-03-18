@@ -1,0 +1,27 @@
+{% extends "hubs/base.html" %}
+
+{% block nav %}
+  <ul>
+    <li><a href="{% url 'home' %}" class="">Home</a></li>
+    <li><a href="#">Student Gigs</a></li>
+    <li><a href="{% url 'blog-home' %}">Blogs</a></li>
+    <li><a href="#">Team</a></li>
+    <li><a href="{% url 'home' %}#contact">Contact</a></li>
+    <li><a href="{% url 'about' %}" class="active">About</a></li>
+  </ul>
+{% endblock nav %}
+
+{% load static %}
+{% block content %}
+<div class="page-title" data-aos="fade">
+  <nav class="breadcrumbs">
+    <div class="container">
+      <ol>
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li class="current">About Us</li>
+      </ol>
+    </div>
+  </nav>
+</div>
+
+{% endblock content %}

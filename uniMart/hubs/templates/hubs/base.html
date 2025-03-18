@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="{{ meta_description }}" name="description">
+  <meta content="{{ meta_keywords }}" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main2.css' %}" rel="stylesheet">
+
+  <!-- Page title -->
+  {% if title %}
+  <title>{{ site_name }}. {{ title }}</title>
+  {% else %}
+  <title>{{ site_name }}.</title>
+  {% endif %}
+
+</head>
+
+<body class="index-page over">
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+
+      <a href="#" class="logo d-flex align-items-center me-auto me-xl-0">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">{{ site_name }}</h1><span>.</span>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        {% block nav %}
+        {% endblock nav %}
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      {% if not user.is_authenticated %}
+      <a class="btn-getstarted" href="{% url 'accounts-register' %}">Sign Up</a>
+      {% else %}
+      <a class="btn-getstarted" href="#">Sign Out</a>
+      {% endif %}
+
+    </div>
+  </header>
+  <main class="main">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/js/users.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/htmx/htmx.min.js' %}" defer></script>
+</body>
+
+</html>
