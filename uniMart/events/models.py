@@ -6,7 +6,6 @@ from accounts.models import User
 from utils.models import TimeStampedModel
 from django.contrib.postgres.search import SearchVectorField
 from django.contrib.postgres.indexes import GinIndex
-from .tasks import update_search_vector
 
 class Event(TimeStampedModel):
     STATUS_CHOICES = (
@@ -81,13 +80,12 @@ class Event(TimeStampedModel):
             elif self.end_time <= now:
                 self.status = 'completed'
             
-            if not self.meta_description:
-                self.generate_meta_description()
-            if not self.meta_keywords:
-                self.generate_meta_keywords()
+        if not self.meta_description:
+            self.generate_meta_description()
+        if not self.meta_keywords:
+            self.generate_meta_keywords()
                 
         super().save(*args, **kwargs)
-        update_search_vector.delay(self.pk)
 
     def generate_meta_description(self):
         """Generate a meta description based on available fields."""
