@@ -23,19 +23,19 @@ def update_event_search_vectors():
         defaults={"last_timestamp": datetime.datetime.min.replace(tzinfo=pytz.utc)}
     )
 
-    print(created)
-
     last_timestamp = last_processed.last_timestamp
 
     # Find records modified since the last run
-    modified0_events = Event.objects.filter(
+    modified_events = Event.objects.filter(
         Q(updated_at__gt=last_timestamp)
     )
 
-    if modified0_events.exists():
+    if modified_events.exists():
         # Perform bulk updates on modified records
-        modified0_events.update(
-            search_vector=SearchVector('name', 'venue', 'description')
+        modified_events.update(
+            search_vector=SearchVector('name', 'venue', 'description'),
+            #meta_keywords=modified_events.genenerate_meta_keywords(),
+            #meta_description=modified_events.generate_meta_description()
         )
     
     last_processed.last_timestamp = now

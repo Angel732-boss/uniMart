@@ -340,3 +340,25 @@ psql -U username -d database_name < dump.sql
 python manage.py dumpdata --exclude auth.Permission --exclude contenttypes > data.json
 python manage.py dumpdata app_name > data.json
 python manage.py loaddata data.json
+
+npm install -g html-minifier clean-css-cli uglify-js
+
+{
+  "runOnSave.commands": [
+    {
+      "match": ".*\\.html$",
+      "command": "html-minifier --collapse-whitespace --remove-comments --output ${file} ${file}",
+      "runIn": "backend"
+    },
+    {
+      "match": ".*\\.css$",
+      "command": "cleancss -o ${file} ${file}",
+      "runIn": "backend"
+    },
+    {
+      "match": ".*\\.js$",
+      "command": "uglifyjs ${file} -o ${file}",
+      "runIn": "backend"
+    }
+  ]
+}

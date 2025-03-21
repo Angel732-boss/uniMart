@@ -81,9 +81,9 @@ class Event(TimeStampedModel):
                 self.status = 'completed'
             
         if not self.meta_description:
-            self.generate_meta_description()
+            self.meta_description = self.generate_meta_description()
         if not self.meta_keywords:
-            self.generate_meta_keywords()
+            self.meta_keywords = self.generate_meta_keywords()
                 
         super().save(*args, **kwargs)
 
@@ -101,6 +101,7 @@ class Event(TimeStampedModel):
         if self.category:
             keywords.append(self.category.name)
         keywords.extend([self.hub.name, self.organizer.username])
+        return ", ".join(keywords)
 
     @property
     def duration(self):
