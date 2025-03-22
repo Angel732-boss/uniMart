@@ -38,6 +38,9 @@ jobs:
         sleep 5  # Wait for services to start
         curl http://localhost
 
+    - name: Take down container
+      run: docker-compose down
+
     - name: Tear down
       run: |
         docker-compose down
