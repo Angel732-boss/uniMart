@@ -103,6 +103,13 @@ class Event(TimeStampedModel):
     @property
     def duration(self):
         return self.end_time - self.start_time
+    
+    @property
+    def thumbnail(self):
+        primary = self.images.filter(is_thumbnail=True).first()
+        if primary:
+            return primary
+        return self.images.first()
 
     @property
     def is_full(self):
@@ -117,16 +124,20 @@ class Event(TimeStampedModel):
         return f"{self.name} ({self.status})"
     
 def rename(instance, filename):
-    upload_to = f'events/{instance.username}/'
+    upload_to = f'events/{instance.event.name}/'
     ext = filename.split('.')[-1]
     return os.path.join(upload_to, f'{uuid4().hex}.{ext}')
 
 class EventImage(TimeStampedModel):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=rename)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to=rename, default="events/default.jpg")
     is_thumbnail = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+
+        if EventImage.objects.filter(event=self.event).count() == 0:
+            self.is_thumbnail = True
+
         if self.is_thumbnail:
             EventImage.objects.filter(event=self.event).exclude(id=self.id).update(is_thumbnail=False)
         super().save(*args, **kwargs)

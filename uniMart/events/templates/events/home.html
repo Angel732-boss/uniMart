@@ -31,7 +31,7 @@
             {% for event in events %}
             <div class="col-lg-3">
                 <div class="card event-card shadow border-0">
-                    <img src="https://picsum.photos/600/400" class="card-img-top" alt="Event Image">
+                    <img src="{{ event.thumbnail.image.url }}" class="card-img-top" alt="Event Image">
                     <div class="event-date">
                         <div class="fw-bold text-accent mb-1">{{ event.start_time|date:"M"|upper }}</div>
                         <div class="h6 mb-0">{{ event.start_time|date:"d" }}</div>
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0" id="event-{{ event.id }}-footer">
                         <div class="text-muted small">
                             <i class="bi bi-people me-1"></i>
@@ -89,7 +89,7 @@
                                 <i class="bi bi-check-circle me-1"></i>Attending
                             </button>
                         {% else %}
-                            <button class="btn btn-accent btn-sm py-1 px-2" 
+                            <button class="btn btn-custom btn-sm py-1 px-2" 
                                     hx-post="{% url 'attend_event' event.id %}" 
                                     hx-target="#event-{{ event.id }}-footer" 
                                     hx-swap="outerHTML">

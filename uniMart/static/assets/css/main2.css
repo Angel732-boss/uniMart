@@ -2946,15 +2946,3 @@ section,
 .text-accent {
   color: var(--accent-color) !important;
 }
-
-.btn-accent {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: white;
-}
-
-.btn-accent:hover {
-  background-color: #d33b3b;
-  border-color: #d33b3b;
-  color: white;
-}
