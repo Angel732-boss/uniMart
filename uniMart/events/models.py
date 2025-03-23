@@ -1,3 +1,5 @@
+import os
+from uuid import uuid4
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -113,3 +115,21 @@ class Event(TimeStampedModel):
 
     def __str__(self):
         return f"{self.name} ({self.status})"
+    
+def rename(instance, filename):
+    upload_to = f'events/{instance.username}/'
+    ext = filename.split('.')[-1]
+    return os.path.join(upload_to, f'{uuid4().hex}.{ext}')
+
+class EventImage(TimeStampedModel):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=rename)
+    is_thumbnail = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.is_thumbnail:
+            EventImage.objects.filter(event=self.event).exclude(id=self.id).update(is_thumbnail=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Image for {self.event.name}"
