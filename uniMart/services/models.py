@@ -14,7 +14,7 @@ class Service(TimeStampedModel):
     category = models.ForeignKey('utils.Category', on_delete=models.SET_NULL, null=True, blank=True)
     tags = models.ManyToManyField('utils.Tag', blank=True)
     slug = models.SlugField(max_length=100, blank=True)
-    search_vector = models.SearchVectorField(null=True)
+    search_vector = SearchVectorField(null=True)
     description = models.TextField(null=True)
     meta_keywords = models.CharField('Meta Keywords', null=True, max_length=255, help_text='Comma delimited set of SEO keywords for meta tag')
     meta_description = models.CharField('Meta Description', null=True, max_length=255, help_text='Content for description meta tag')

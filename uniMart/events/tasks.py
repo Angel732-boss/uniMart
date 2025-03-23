@@ -31,12 +31,16 @@ def update_event_search_vectors():
     )
 
     if modified_events.exists():
-        # Perform bulk updates on modified records
-        modified_events.update(
-            search_vector=SearchVector('name', 'venue', 'description'),
-            meta_keywords=modified_events.generate_meta_keywords(),
-            meta_description=modified_events.generate_meta_description()
-        )
+        # Update search_vector in bulk using the database
+        modified_events.update(search_vector=SearchVector('name', 'venue', 'description'))
+    
+        # Compute meta_keywords and meta_description for each event
+        for event in modified_events:
+            event.meta_keywords = event.generate_meta_keywords()
+            event.meta_description = event.generate_meta_description()
+    
+        # Perform bulk update for meta_keywords and meta_description
+        Event.objects.bulk_update(modified_events, ['meta_keywords', 'meta_description'])
     
     last_processed.last_timestamp = now
     last_processed.save()
