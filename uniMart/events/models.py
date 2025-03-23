@@ -51,7 +51,7 @@ class Event(TimeStampedModel):
             models.Index(fields=['venue']),
             GinIndex(fields=['search_vector'], name='event_search_idx'),
         ]
-        ordering = ['-created_at']
+        ordering = ['-updated_at']
 
     def clean(self):
         if self.start_time and self.end_time:
@@ -79,11 +79,6 @@ class Event(TimeStampedModel):
                 self.status = 'ongoing'
             elif self.end_time <= now:
                 self.status = 'completed'
-            
-        if not self.meta_description:
-            self.meta_description = self.generate_meta_description()
-        if not self.meta_keywords:
-            self.meta_keywords = self.generate_meta_keywords()
                 
         super().save(*args, **kwargs)
 

@@ -34,8 +34,8 @@ def update_event_search_vectors():
         # Perform bulk updates on modified records
         modified_events.update(
             search_vector=SearchVector('name', 'venue', 'description'),
-            #meta_keywords=modified_events.genenerate_meta_keywords(),
-            #meta_description=modified_events.generate_meta_description()
+            meta_keywords=modified_events.generate_meta_keywords(),
+            meta_description=modified_events.generate_meta_description()
         )
     
     last_processed.last_timestamp = now

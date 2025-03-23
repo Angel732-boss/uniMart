@@ -1,11 +1,11 @@
-{% extends "blogs/base.html" %}
+{% extends "events/base.html" %}
 
 {% block nav %}
 <ul>
     <li><a href="{% url 'home' %}" class="">Home</a></li>
     <li><a href="#">P2P</a></li>
     <li><a href="#">FreeLance</a></li>
-    <li><a href="#" class="active">Events</a></li>
+    <li><a href="{% url 'event-home' %}" class="active">Events</a></li>
     <li><a href="{% url 'blog-home' %}">Blogs</a></li>
     <li><a href="{% url 'home' %}#contact">Contact</a></li>
     <li><a href="{% url 'about' %}">About</a></li>
@@ -29,46 +29,62 @@
     <div class="container">
         <div class="row gy-4">
             {% for event in events %}
-            <div class="card event-card shadow border-0">
-                <img src="https://picsum.photos/600/400" class="card-img-top" alt="Event Image">
-                <div class="event-date">
-                    <div class="fw-bold text-accent mb-1">OCT</div>
-                    <div class="h6 mb-0">24</div>
-                </div>
-                <div class="event-status">
-                    <span class="badge bg-danger p-2">
-                        <!--<span class="live-indicator"></span>-->
-                        Live Now
-                    </span>
-                </div>
-                <div class="card-body">
-                    <span class="badge bg-accent mb-2">Tech Meetup</span>
-                    <h5 class="card-title mb-1">Future of Web Dev 2023</h5>
-                    <div class="d-flex align-items-center mb-1">
-                        <i class="bi bi-clock me-1 text-muted" style="font-size: 0.9rem;"></i>
-                        <span class="small">4:00 PM - 7:00 PM</span>
+            <div class="col-lg-4">
+                <div class="card event-card shadow border-0">
+                    <img src="https://picsum.photos/600/400" class="card-img-top" alt="Event Image">
+                    <div class="event-date">
+                        <div class="fw-bold text-accent mb-1">{{ event.start_time|date:"M"|upper }}</div>
+                        <div class="h6 mb-0">{{ event.start_time|date:"d" }}</div>
                     </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="bi bi-geo-alt me-1 text-muted" style="font-size: 0.9rem;"></i>
-                        <span class="small">Convention Center</span>
+                    <div class="event-status">
+                        {% if event.status == "planned" %}
+                        <span class="badge bg-success p-2">
+                            {{ event.status }}
+                        </span>
+                        {% elif event.status == "ongoing" %}
+                        <span class="badge bg-danger p-2">
+                            <!--<span class="live-indicator"></span>-->
+                            {{ event.status }}
+                        </span>
+                        {% elif event.status == "completed" %}
+                        <span class="badge bg-secondary p-2">
+                            {{ event.status }}
+                        </span>
+                        {% elif event.status == "canceled" %}
+                        <span class="badge bg-warning p-2">
+                            {{ event.status }}
+                        </span>
+                        {% endif %}
                     </div>
-                    <div class="d-flex align-items-center border-top pt-2">
-                        <img src="https://i.pravatar.cc/50" class="rounded-circle me-2" alt="Organizer"
-                            style="width: 36px; height: 36px;">
-                        <div>
-                            <div class="small text-muted">Hosted by</div>
-                            <div class="fw-bold small">John Developer</div>
+                    <div class="card-body">
+                        <span class="badge bg-accent mb-2">{{ event.category.name }}</span>
+                        <h5 class="card-title mb-1">{{ event.name }}</h5>
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="bi bi-clock me-1 text-muted" style="font-size: 0.9rem;"></i>
+                            <span class="small">{{ event.start_time|time:"h:i A" }} - {{ event.end_time|time:"h:i A" }}</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-geo-alt me-1 text-muted" style="font-size: 0.9rem;"></i>
+                            <span class="small">{{ event.venue }}</span>
+                        </div>
+                        <div class="d-flex align-items-center border-top pt-2">
+                            <img src="{{ event.organizer.image.url }}" class="rounded-circle me-2" alt="Organizer"
+                                style="width: 36px; height: 36px;">
+                            <div>
+                                <div class="small text-muted">Hosted by</div>
+                                <div class="fw-bold small">{{ event.organizer.username }}</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0">
-                    <div class="text-muted small">
-                        <i class="bi bi-people me-1"></i>
-                        145
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0">
+                        <div class="text-muted small">
+                            <i class="bi bi-people me-1"></i>
+                            {{ event.attendee_count }}/{{ event.capacity }}
+                        </div>
+                        <button class="btn btn-accent btn-sm py-1 px-2">
+                            <i class="bi bi-calendar-check me-1"></i>Attend
+                        </button>
                     </div>
-                    <button class="btn btn-accent btn-sm py-1 px-2">
-                        <i class="bi bi-calendar-check me-1"></i>Attend
-                    </button>
                 </div>
             </div>
             {% endfor %}

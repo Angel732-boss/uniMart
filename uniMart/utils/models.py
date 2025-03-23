@@ -63,12 +63,14 @@ class Category(TimeStampedModel):
     meta_keywords = models.CharField(
         'Meta Keywords',
         null=True,
+        blank=True,
         max_length=255,
         help_text='Comma delimited set of SEO keywords for meta tag'
     )
     meta_description = models.CharField(
         'Meta Description',
         null=True,
+        blank=True,
         max_length=255,
         help_text='Content for description meta tag'
     )
@@ -77,7 +79,7 @@ class Category(TimeStampedModel):
         # Updated uniqueness constraint
         unique_together = ('hub', 'service_type', 'slug')
         verbose_name_plural = "categories"
-        ordering = ['-created_at']
+        ordering = ['-updated_at']
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -122,6 +124,12 @@ class About(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
     icon = models.CharField()
+    position = models.PositiveIntegerField(unique=True, null=True, blank=True)
+    url = models.URLField(blank=True, unique=True, null=True)
+    header = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-position"]
 
     def __str__(self):
         return self.name

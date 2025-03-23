@@ -148,34 +148,7 @@ class EventModelTest(TestCase):
         event.status = 'canceled'
         event.save()
         self.assertEqual(event.status, 'canceled')
-    '''
-    ### Search Vector Tests ###
-    def test_search_vector_creation(self):
-        """Test that the search_vector is populated on event creation."""
-        event = Event.objects.get(id=self.event.id)
-        self.assertTrue(event.search_vector)  # Should be non-null due to trigger
-
-    def test_search_vector_search(self):
-        """Test that searching via search_vector returns the correct event."""
-        results = Event.objects.filter(search_vector=SearchQuery('test'))
-        self.assertIn(self.event, results)
-        results = Event.objects.filter(search_vector=SearchQuery('event'))
-        self.assertIn(self.event, results)
-        results = Event.objects.filter(search_vector=SearchQuery('randomword'))
-        self.assertNotIn(self.event, results)
-
-    def test_search_vector_update(self):
-        """Test that updating name and description updates the search_vector."""
-        self.event.name = 'Updated Event'
-        self.event.description = 'This is an updated event.'
-        self.event.save()
-        updated_event = Event.objects.get(id=self.event.id)
-        results = Event.objects.filter(search_vector=SearchQuery('updated'))
-        self.assertIn(updated_event, results)
-        results = Event.objects.filter(search_vector=SearchQuery('test'))
-        self.assertNotIn(updated_event, results)  # 'test' no longer in name or description
-    '''
-    
+  
     ### Relationship Tests ###
     def test_attendees_relationship(self):
         """Test adding and removing attendees via the many-to-many relationship."""

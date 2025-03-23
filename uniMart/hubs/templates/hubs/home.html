@@ -50,7 +50,7 @@
               <li><a href="{% url 'home' %}" class="">Home</a></li>
               <li><a href="#">P2P</a></li>
               <li><a href="#">FreeLance</a></li>
-              <li><a href="#">Events</a></li>
+              <li><a href="{% url 'event-home' %}">Events</a></li>
               <li><a href="{% url 'blog-home' %}">Blogs</a></li>
               <li><a href="index.html#contact">Contact</a></li>
               <li><a href="{% url 'about' %}">About</a></li>
@@ -111,24 +111,29 @@
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="row align-items-xl-center gy-5">
-
+          {% for about in abouts %}
+          {% if about.header %}
           <div class="col-xl-5 content">
             <h3>About Us</h3>
-            <h2>Ducimus rerum libero reprehenderit cumque</h2>
-            <p>Ipsa sint sit. Quis ducimus tempore dolores impedit et dolor cumque alias maxime. Enim reiciendis minus et rerum hic non. Dicta quas cum quia maiores iure. Quidem nulla qui assumenda incidunt voluptatem tempora deleniti soluta.</p>
-            <a href="#" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+            <h2>{{ about.name }}</h2>
+            <p>{{ about.description|truncatewords:20 }}</p>
+            <a href="{% url 'about' %}" class="read-more"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
           </div>
+          {% endif %}
+          {% endfor %}
 
           <div class="col-xl-7">
             <div class="row gy-4 icon-boxes">
               {% for about in abouts %}
+              {% if not about.header %}
               <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
                 <div class="icon-box">
                   <i class="bi {{ about.icon }}"></i>
                   <h3>{{ about.name }}</h3>
-                  <p>{{ about.description }}</p>
+                  <p>{{ about.description|truncatewords:20 }}</p>
                 </div>
               </div> <!-- End Icon Box -->
+              {% endif %}
               {% endfor %}
             </div>
           </div>
