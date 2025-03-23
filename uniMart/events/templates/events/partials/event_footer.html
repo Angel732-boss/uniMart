@@ -1,0 +1,21 @@
+<div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0" id="event-{{ event.id }}-footer">
+    <div class="text-muted small">
+        <i class="bi bi-people me-1"></i>
+        {{ attendee_count }}/{{ event.capacity }}
+    </div>
+    {% if is_attending %}
+        <button class="btn btn-success btn-sm py-1 px-2"
+                hx-post="{% url 'attend_event' event.id %}" 
+                hx-target="#event-{{ event.id }}-footer" 
+                hx-swap="outerHTML">
+            <i class="bi bi-check-circle me-1"></i>Attending
+        </button>
+    {% else %}
+        <button class="btn btn-accent btn-sm py-1 px-2" 
+                hx-post="{% url 'attend_event' event.id %}" 
+                hx-target="#event-{{ event.id }}-footer" 
+                hx-swap="outerHTML">
+            <i class="bi bi-calendar-check me-1"></i>Attend
+        </button>
+    {% endif %}
+</div>

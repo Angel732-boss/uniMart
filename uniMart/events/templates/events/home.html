@@ -43,7 +43,6 @@
                         </span>
                         {% elif event.status == "ongoing" %}
                         <span class="badge bg-danger p-2">
-                            <!--<span class="live-indicator"></span>-->
                             {{ event.status }}
                         </span>
                         {% elif event.status == "completed" %}
@@ -62,7 +61,6 @@
                         <div class="d-flex align-items-center mb-1">
                             <i class="bi bi-clock me-1 text-muted" style="font-size: 0.9rem;"></i>
                             <span class="small">{{ event.start_time|date:"d, M" }} - {{ event.end_time|date:"d, M" }}</span>
-                            <!--<span class="small">{{ event.start_time|time:"h:i A" }} - {{ event.end_time|time:"h:i A" }}</span>-->
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <i class="bi bi-geo-alt me-1 text-muted" style="font-size: 0.9rem;"></i>
@@ -77,14 +75,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0">
+                    
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center pt-0" id="event-{{ event.id }}-footer">
                         <div class="text-muted small">
                             <i class="bi bi-people me-1"></i>
                             {{ event.attendee_count }}/{{ event.capacity }}
                         </div>
-                        <button class="btn btn-accent btn-sm py-1 px-2">
-                            <i class="bi bi-calendar-check me-1"></i>Attend
-                        </button>
+                        {% if event.id in attending_event_ids %}
+                            <button class="btn btn-success btn-sm py-1 px-2" 
+                                    hx-post="{% url 'attend_event' event.id %}" 
+                                    hx-target="#event-{{ event.id }}-footer" 
+                                    hx-swap="outerHTML">
+                                <i class="bi bi-check-circle me-1"></i>Attending
+                            </button>
+                        {% else %}
+                            <button class="btn btn-accent btn-sm py-1 px-2" 
+                                    hx-post="{% url 'attend_event' event.id %}" 
+                                    hx-target="#event-{{ event.id }}-footer" 
+                                    hx-swap="outerHTML">
+                                <i class="bi bi-calendar-check me-1"></i>Attend
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
