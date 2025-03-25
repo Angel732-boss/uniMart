@@ -123,7 +123,7 @@ class Client(TimeStampedModel):
 class About(TimeStampedModel):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    icon = models.CharField()
+    icon = models.CharField(max_length=100)
     position = models.PositiveIntegerField(unique=True, null=True, blank=True)
     url = models.URLField(blank=True, unique=True, null=True)
     header = models.BooleanField(default=False)

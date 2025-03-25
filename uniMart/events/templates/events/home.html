@@ -82,7 +82,7 @@
                             {{ event.attendee_count }}/{{ event.capacity }}
                         </div>
                         {% if event.id in attending_event_ids %}
-                            <button class="btn btn-success btn-sm py-1 px-2" 
+                            <button class="btn btn-outline-custom btn-sm py-1 px-2" 
                                     hx-post="{% url 'attend_event' event.id %}" 
                                     hx-target="#event-{{ event.id }}-footer" 
                                     hx-swap="outerHTML">

@@ -106,10 +106,13 @@ class Event(TimeStampedModel):
     
     @property
     def thumbnail(self):
-        primary = self.images.filter(is_thumbnail=True).first()
-        if primary:
-            return primary
-        return self.images.first()
+        default_thumbnail = self.images.filter(is_thumbnail=True).first()
+        if default_thumbnail:
+            return default_thumbnail
+        default_thumbnail = self.images.first()
+        default_thumbnail.is_thumbnail = True
+        default_thumbnail.save()
+        return default_thumbnail
 
     @property
     def is_full(self):
