@@ -40,7 +40,3 @@ jobs:
 
     - name: Take down container
       run: docker-compose down
-
-    - name: Tear down
-      run: |
-        docker-compose down
